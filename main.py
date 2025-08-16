@@ -6,13 +6,13 @@ from queue import Queue
 import random
 
 
-# === Загальні налаштування ===
-FOLDER = "files"  # папка з файлами
-KEYWORDS = ["OpenMP", "Java", "семафори", "для"]  # ключові слова
-NUM_WORKERS = 4  # кількість потоків/процесів
+# Загальні налаштування
+FOLDER = "files"
+KEYWORDS = ["OpenMP", "Java", "семафори", "для"]
+NUM_WORKERS = 4
 
 
-# === Функція для генерації тестових файлів ===
+# Функція для генерації тестових файлів
 def create_test_files(folder, n=5):
     os.makedirs(folder, exist_ok=True)
     words = ["OpenMP", "Java", "семафори", "для", "стандартах", "random", "text"]
@@ -22,7 +22,7 @@ def create_test_files(folder, n=5):
             f.write(content)
 
 
-# === Функція пошуку ключових слів у файлах ===
+# Функція пошуку ключових слів у файлах
 def search_in_files(file_list, keywords):
     results = {kw: [] for kw in keywords}
     for file_path in file_list:
@@ -37,7 +37,7 @@ def search_in_files(file_list, keywords):
     return results
 
 
-# === Об’єднання результатів ===
+# Об’єднання результатів
 def merge_results(*dicts):
     merged = {}
     for d in dicts:
@@ -46,19 +46,19 @@ def merge_results(*dicts):
     return merged
 
 
-# === THREADING worker ===
+# THREADING worker
 def thread_worker(file_subset, keywords, q):
     res = search_in_files(file_subset, keywords)
     q.put(res)
 
 
-# === MULTIPROCESSING worker ===
+# MULTIPROCESSING worker
 def mp_worker(file_subset, keywords, q):
     res = search_in_files(file_subset, keywords)
     q.put(res)
 
 
-# === Версія 1: Threading ===
+# Threading
 def threading_version(files, keywords):
     start_time = time.time()
     chunk_size = max(1, len(files) // NUM_WORKERS)
@@ -84,7 +84,7 @@ def threading_version(files, keywords):
     return merged, exec_time
 
 
-# === Версія 2: Multiprocessing ===
+# Multiprocessing
 def multiprocessing_version(files, keywords):
     start_time = time.time()
     chunk_size = max(1, len(files) // NUM_WORKERS)
@@ -110,11 +110,10 @@ def multiprocessing_version(files, keywords):
     return merged, exec_time
 
 
-# === Основний блок ===
+# Основний блок
 if __name__ == "__main__":
-    # створюємо тестові файли, якщо їх ще немає
     if not os.path.exists(FOLDER) or not os.listdir(FOLDER):
-        print("⚡ Створюю тестові файли...")
+        print("Створюю тестові файли...")
         create_test_files(FOLDER, n=8)
 
     # збір списку файлів
